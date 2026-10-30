@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="A practical, self-paced guide to planning, building, and publishing a WordPress website." />
+		<meta name="theme-color" content="#f3f5f2">
+		<title>WordPress Website Setup Guide | CSI</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="style.css">
+		<script src="content/lessons.js" defer></script>
+		<script src="scripts.js?v=20261030-3" defer></script>
+	</head>
+	<body>
+		<a class="skip-link" href="#main-content">Skip to lesson</a>
+		<header class="mobile-header">
+			<a class="brand" href="#module-1" aria-label="CSI WordPress guide home">
+				<span>WordPress <strong>FIELD GUIDE</strong></span>
+			</a>
+			<button class="icon-button menu-toggle" type="button" aria-expanded="false" aria-controls="course-sidebar" aria-label="Open course navigation">
+				<span class="menu-glyph" aria-hidden="true"></span>
+			</button>
+		</header>
+
+		<div class="app-layout">
+			<aside class="sidebar" id="course-sidebar" aria-label="Course navigation">
+				<div class="sidebar-top">
+					<a class="brand desktop-brand" href="#module-1" aria-label="CSI WordPress guide home">
+						<span>WordPress <strong>FIELD GUIDE</strong></span>
+					</a>
+					<p class="course-label">WEB DESIGN / BEGINNER</p>
+					<h1 class="course-title">WordPress<br>from zero<br>to live<span>.</span></h1>
+					<p class="course-intro">A hands-on path from first hosting account to a website you can share.</p>
+					<div class="progress-block" aria-live="polite">
+						<div class="progress-copy"><span>COURSE PROGRESS</span><strong id="progress-count">0 / 10</strong></div>
+						<div class="progress-track" role="progressbar" aria-label="Course lessons completed" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="progress-bar"><span id="progress-fill"></span></div>
+					</div>
+				</div>
+				<nav class="lesson-nav" aria-label="Lessons">
+					<p class="nav-heading">THE COURSE</p>
+					<ol id="lesson-nav-list"></ol>
+					<p class="nav-heading nav-heading-tools">YOUR TOOLKIT</p>
+					<a class="tool-link" href="#glossary" data-view="glossary"><span aria-hidden="true">Aa</span> Glossary</a>
+					<a class="tool-link" href="#troubleshooting" data-view="troubleshooting"><span aria-hidden="true">?</span> Troubleshooting</a>
+					<a class="tool-link" href="#final-project" data-view="final-project"><span aria-hidden="true">&#9634;</span> Final project</a>
+				</nav>
+				<div class="sidebar-bottom">
+					<button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">
+						<span class="theme-icon" aria-hidden="true">&#9789;</span><span>Use dark theme</span>
+					</button>
+					<p class="sidebar-note">Built for curious beginners.<br><span>CSI / WEB DESIGN</span></p>
+				</div>
+			</aside>
+
+			<main class="main-area" id="main-content" tabindex="-1">
+				<div class="content-wrap">
+					<div class="topline">
+						<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="#module-1">Course</a><span aria-hidden="true">/</span><span id="breadcrumb-current">Getting started</span></nav>
+						<div class="topline-actions">
+							<div class="text-size-control" role="group" aria-label="Reading text size">
+								<span class="text-size-label">TEXT</span>
+								<button class="text-size-button" type="button" data-font-delta="-2" aria-label="Decrease reading text size" title="Decrease text size">A-</button>
+								<output class="text-size-value" id="text-size-value" aria-live="polite">16px</output>
+								<button class="text-size-button" type="button" data-font-delta="2" aria-label="Increase reading text size" title="Increase text size">A+</button>
+								<button class="text-size-reset" type="button" data-font-reset aria-label="Reset reading text size to 16 pixels">Reset</button>
+							</div>
+							<span class="course-time">SELF-PACED <span aria-hidden="true">·</span> FREE TO USE</span>
+						</div>
+					</div>
+					<div id="lesson-content" aria-live="polite" aria-atomic="true">
+						<div class="loading-state"><span class="loading-dot" aria-hidden="true"></span> Loading your course…</div>
+					</div>
+					<footer class="site-footer">
+						<span>COMPUTER SYSTEMS INSTITUTE</span>
+						<span>Static learning guide <span aria-hidden="true">·</span> No account needed</span>
+					</footer>
+				</div>
+			</main>
+		</div>
+		<div class="sidebar-scrim" hidden></div>
+		<dialog class="image-dialog" aria-label="Instructional image viewer">
+			<button class="dialog-close icon-button" type="button" aria-label="Close image viewer">&times;</button>
+			<img src="" alt="">
+			<p class="dialog-caption"></p>
+		</dialog>
+		<div class="toast" role="status" aria-live="polite"></div>
+	</body>
+</html>
