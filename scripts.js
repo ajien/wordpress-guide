@@ -174,9 +174,9 @@
 		</article>`).join("")}</div>`;
 	}
 
-	function renderReferences(references) {
+	function renderReferences(references, heading = "Go a little deeper") {
 		if (!references?.length) return "";
-		return `<section class="aside-card references-card"><h2>Go a little deeper</h2><div class="references">
+		return `<section class="aside-card references-card"><h2>${escapeHtml(heading)}</h2><div class="references">
 			${references.map((reference) => `<a href="${escapeHtml(safeUrl(reference.url))}" target="_blank" rel="noopener noreferrer">${escapeHtml(reference.label)} <span aria-hidden="true">&#8599;</span></a>`).join("")}
 		</div></section>`;
 	}
@@ -192,10 +192,10 @@
 	}
 
 	function renderLessonTime(lesson) {
-		const readingTime = lesson.readingTime || lesson.duration;
-		if (!readingTime) return "";
-		const handsOnTime = lesson.handsOnTime ? `<span class="meta-dot" aria-hidden="true">&#9679;</span><span>${escapeHtml(lesson.handsOnTime)} HANDS-ON</span>` : "";
-		return `<span>${escapeHtml(readingTime)} READING</span>${handsOnTime}`;
+		const times = [];
+		if (lesson.readingTime) times.push(`<span>${escapeHtml(lesson.readingTime)} READING</span>`);
+		if (lesson.handsOnTime) times.push(`<span>${escapeHtml(lesson.handsOnTime)} HANDS-ON</span>`);
+		return times.join(`<span class="meta-dot" aria-hidden="true">&#9679;</span>`);
 	}
 
 	function renderCopyExample(lessonId) {
@@ -220,10 +220,10 @@
 		});
 	}
 
-	function renderLearningPaths(paths) {
+	function renderLearningPaths(paths, heading, description) {
 		if (!paths?.length) return "";
 		return `<section class="learning-paths" aria-labelledby="learning-paths-heading">
-			<div class="learning-paths-heading"><p class="mini-label">TWO PAGE-BUILDING PATHS</p><h2 id="learning-paths-heading">Learn Gutenberg first. Explore Elementor next.</h2><p>Both are tools for arranging content. Structure, hierarchy, readability, and usability matter in either editor.</p></div>
+			<div class="learning-paths-heading"><p class="mini-label">COURSE PATHS</p><h2 id="learning-paths-heading">${escapeHtml(heading || "Learn Gutenberg first. Continue with Elementor.")}</h2><p>${escapeHtml(description || "Both editors arrange content. Structure, hierarchy, readability, and usability matter in either one.")}</p></div>
 			<div class="learning-path-grid">${paths.map((path) => `<article class="learning-path"><p class="mini-label">${escapeHtml(path.label)}</p><h3>${escapeHtml(path.title)}</h3><p>${escapeHtml(path.description)}</p>${path.href ? `<a class="nav-button" href="${escapeHtml(path.href)}">${escapeHtml(path.linkText || "Open guide")} <span aria-hidden="true">&#8594;</span></a>` : ""}</article>`).join("")}</div>
 		</section>`;
 	}
@@ -232,6 +232,8 @@
 		const completed = state.completed.includes(lesson.id);
 		const concepts = lesson.concepts.map((concept) => `<article class="concept-item"><h3>${escapeHtml(concept.title)}</h3><p>${escapeHtml(concept.text)}</p></article>`).join("");
 		const steps = lesson.steps.map((step, index) => `<article class="step-card"><span class="step-number" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><div><h3>${escapeHtml(step.title)}</h3><p>${escapeHtml(step.body)}</p>${step.checkpoint ? `<p class="step-checkpoint"><strong>Show me:</strong> ${escapeHtml(step.checkpoint)}</p>` : ""}</div></article>`).join("");
+		const activity = lesson.activitySteps?.length ? `<section class="section-block" aria-labelledby="activity-heading"><h2 class="section-heading" id="activity-heading"><span class="section-index">04</span> ${escapeHtml(lesson.activityTitle || "Guided activity")}</h2><p class="activity-intro">${escapeHtml(lesson.activity)}</p><ol class="activity-step-list">${lesson.activitySteps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol></section>` : "";
+		const optionalActivity = lesson.optionalActivity ? `<section class="optional-activity" aria-labelledby="optional-activity-heading"><p class="mini-label">${escapeHtml(lesson.optionalActivityLabel || "OPTIONAL EXTENSION")}</p><h2 id="optional-activity-heading">Optional activity</h2><p>${escapeHtml(lesson.optionalActivity)}</p>${lesson.optionalActivitySteps?.length ? `<ol class="optional-activity-steps">${lesson.optionalActivitySteps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>` : ""}</section>` : "";
 		const takeaways = lesson.takeaways.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
 
 		lessonContent.innerHTML = `<article class="lesson" aria-labelledby="lesson-title">
@@ -244,7 +246,7 @@
 				</div>
 			</header>
 			${lesson.notice ? `<div class="callout warning lesson-notice"><h3>Before you start</h3><p>${escapeHtml(lesson.notice)}</p></div>` : ""}
-				${renderLearningPaths(lesson.learningPaths)}
+				${renderLearningPaths(lesson.learningPaths, lesson.learningPathsHeading, lesson.learningPathsIntro)}
 			<div class="lesson-body">
 				<div class="lesson-main">
 					<section class="section-block" aria-labelledby="objectives-heading">
@@ -263,6 +265,8 @@
 						<h2 class="section-heading" id="steps-heading"><span class="section-index">03</span> Try it step by step</h2>
 						<div class="step-list">${steps}</div>
 					</section>
+					${activity}
+					${optionalActivity}
 					<section class="section-block" aria-labelledby="troubleshooting-heading">
 						<h2 class="section-heading" id="troubleshooting-heading"><span class="section-index">05</span> When something goes wrong</h2>
 						${renderTroubleItems(lesson.troubleshooting)}
@@ -270,11 +274,11 @@
 					${renderQuiz(lesson.quiz, lesson.id)}
 				</div>
 				<aside class="lesson-aside" aria-label="Lesson activity and notes">
-					<section class="aside-card activity-card"><p class="mini-label">YOUR TURN</p><h2>Put it into practice</h2><p>${escapeHtml(lesson.activity)}</p></section>
-					${lesson.optionalActivity ? `<section class="aside-card optional-activity"><p class="mini-label">${escapeHtml(lesson.optionalActivityLabel || "OPTIONAL EXTENSION")}</p><p>${escapeHtml(lesson.optionalActivity)}</p></section>` : ""}
+					${lesson.activitySteps?.length ? "" : `<section class="aside-card activity-card"><p class="mini-label">YOUR TURN</p><h2>Put it into practice</h2><p>${escapeHtml(lesson.activity)}</p></section>`}
 					<section class="aside-card checkpoint-card"><p class="mini-label">CHECKPOINT</p><h2>How to know it worked</h2><p>${escapeHtml(lesson.checkpoint)}</p></section>
 					<section class="aside-card"><p class="mini-label">TASK LIST</p><h2>Track this module</h2>${renderChecklist(lesson.id, lesson.checklist)}</section>
 					<section class="aside-card takeaway-card"><p class="mini-label">KEEP IN MIND</p><h2>Key takeaways</h2><ul>${takeaways}</ul></section>
+					${renderReferences(lesson.optionalReferences, "Optional references")}
 					${renderReferences(lesson.references)}
 				</aside>
 			</div>
@@ -306,13 +310,18 @@
 	}
 
 	function renderProject() {
+		const pagePaths = (content.project.pagePaths || []).map((path) => `<article class="learning-path"><p class="mini-label">EXAMPLE PAGE PLAN</p><h3>${escapeHtml(path.title)}</h3><ul class="project-page-list">${path.pages.map((page) => `<li>${escapeHtml(page)}</li>`).join("")}</ul></article>`).join("");
 		const rubricRows = content.project.rubric.map((row) => `<tr><td>${escapeHtml(row.category)}</td><td>${escapeHtml(row.description)}</td><td>${row.points}</td></tr>`).join("");
+		const reflection = (content.project.reflection || []).map((prompt) => `<li>${escapeHtml(prompt)}</li>`).join("");
 		lessonContent.innerHTML = `<section class="tool-view" aria-labelledby="tool-title">
 			<p class="eyebrow">THE CAPSTONE / SHOW WHAT YOU CAN DO</p><h1 class="tool-title" id="tool-title">${escapeHtml(content.project.title)}</h1>
 			<p class="tool-intro">${escapeHtml(content.project.intro)}</p>
 			<div class="callout warning"><h3>Keep your account private</h3><p>Share the public site URL for review, not your dashboard password. Never put private client, school, or personal data in a class project.</p></div>
-			<section class="section-block"><h2 class="section-heading"><span class="section-index">01</span> Project checklist</h2>${renderChecklist("final-project", content.project.checklist, "project-checklist")}</section>
-			<section class="section-block"><h2 class="section-heading"><span class="section-index">02</span> Grading rubric / 100 points</h2><div class="rubric-wrap"><table class="rubric"><thead><tr><th>Area</th><th>Evidence</th><th>Points</th></tr></thead><tbody>${rubricRows}<tr><td colspan="2"><strong>Total</strong></td><td><strong>100</strong></td></tr></tbody></table></div></section>
+			<section class="section-block" aria-labelledby="project-paths-heading"><h2 class="section-heading" id="project-paths-heading"><span class="section-index">01</span> Example page plans</h2><div class="learning-path-grid">${pagePaths}</div></section>
+			<section class="section-block" aria-labelledby="pages-posts-heading"><h2 class="section-heading" id="pages-posts-heading"><span class="section-index">02</span> Pages and Posts</h2><p>${escapeHtml(content.project.postGuidance)}</p></section>
+			<section class="section-block"><h2 class="section-heading"><span class="section-index">03</span> Project checklist</h2>${renderChecklist("final-project", content.project.checklist, "project-checklist")}</section>
+			<section class="section-block" aria-labelledby="reflection-heading"><h2 class="section-heading" id="reflection-heading"><span class="section-index">04</span> Reflection</h2><ol class="reflection-prompts">${reflection}</ol></section>
+			<section class="section-block"><h2 class="section-heading"><span class="section-index">05</span> Grading rubric / 100 points</h2><div class="rubric-wrap"><table class="rubric"><thead><tr><th>Area</th><th>Evidence</th><th>Points</th></tr></thead><tbody>${rubricRows}<tr><td colspan="2"><strong>Total</strong></td><td><strong>100</strong></td></tr></tbody></table></div></section>
 			<a class="nav-button" href="#module-1">Return to the course <span aria-hidden="true">&#8592;</span></a>
 		</section>`;
 	}
@@ -334,7 +343,7 @@
 				<h2 class="section-heading" id="course-map-heading"><span class="section-index">03</span> Your course map</h2>
 				<ol class="course-map">${moduleLinks}</ol>
 			</section>
-			<a class="nav-button primary" href="#module-1">Start Module 1 <span aria-hidden="true">&#8594;</span></a>
+			<a class="nav-button primary" href="#module-1">Start Learning <span aria-hidden="true">&#8594;</span></a>
 		</article>`;
 	}
 
@@ -363,7 +372,7 @@
 		menuToggle.setAttribute("aria-expanded", "true");
 		menuToggle.setAttribute("aria-label", "Close course navigation");
 		document.body.classList.add("menu-open");
-		sidebar.querySelector("a")?.focus();
+		sidebar.querySelector(".start-link")?.focus();
 	}
 
 	function setTheme(theme) {
@@ -542,7 +551,13 @@
 	});
 	sidebarScrim.addEventListener("click", () => closeMenu(true));
 	document.addEventListener("keydown", (event) => {
-		if (event.key === "Escape" && sidebar.classList.contains("is-open")) closeMenu(true);
+		if (event.key !== "Escape") return;
+		if (dialog.open) {
+			event.preventDefault();
+			dialog.close();
+			return;
+		}
+		if (sidebar.classList.contains("is-open")) closeMenu(true);
 	});
 
 	themeToggle.addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));

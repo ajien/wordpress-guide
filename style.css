@@ -9,7 +9,7 @@
 	--blue: #245ec7;
 	--blue-dark: #18479f;
 	--blue-soft: #e8efff;
-	--coral: #c65a42;
+	--coral: #b24b34;
 	--coral-soft: #fff0e9;
 	--green: #2f7161;
 	--green-soft: #e5f1eb;
@@ -181,7 +181,9 @@ img { max-width: 100%; }
 .aside-card h2 { margin: 0 0 10px; font-family: "Manrope", sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 0; }
 .aside-card p, .aside-card li { color: var(--muted); font-size: var(--reading-size); line-height: 1.6; }
 .aside-card p { margin: 0; }
-.aside-card ul { display: grid; gap: 7px; margin: 0; padding-left: 16px; }
+.aside-card ul, .aside-card ol { display: grid; gap: 7px; margin: 0; padding-left: 16px; }
+.activity-intro { color: var(--muted); font-size: var(--reading-size); line-height: 1.6; }
+.activity-step-list { display: grid; gap: 10px; margin: 13px 0 0; padding-left: 22px; color: var(--muted); font-size: var(--reading-size); line-height: 1.6; }
 .activity-card { border-top: 3px solid var(--yellow); }
 .checkpoint-card { border-top: 3px solid var(--green); }
 .takeaway-card { background: var(--surface-soft); }
@@ -261,7 +263,12 @@ img { max-width: 100%; }
 .learning-path h3 { margin: 4px 0 7px; font-family: "Manrope", sans-serif; font-size: 17px; font-weight: 800; }
 .learning-path > p:not(.mini-label) { margin: 0; color: var(--muted); font-size: var(--reading-size); line-height: 1.55; }
 .learning-path .nav-button { margin-top: 12px; }
-.optional-activity { border-top: 3px solid var(--coral); background: var(--coral-soft); }
+.project-page-list, .reflection-prompts { display: grid; gap: 7px; margin: 0; padding-left: 20px; color: var(--muted); font-size: var(--reading-size); line-height: 1.55; }
+.optional-activity { margin: 24px 0; padding: 16px; border: 1px solid var(--line); border-top: 3px solid var(--coral); border-radius: var(--radius); background: var(--coral-soft); }
+.optional-activity h2 { margin: 3px 0 8px; font-family: "Manrope", sans-serif; font-size: 18px; font-weight: 800; }
+.optional-activity > p:not(.mini-label), .optional-activity-steps li { color: var(--muted); font-size: var(--reading-size); line-height: 1.6; }
+.optional-activity > p:not(.mini-label) { margin: 0; }
+.optional-activity-steps { display: grid; gap: 8px; margin: 12px 0 0; padding-left: 21px; }
 
 @media (max-width: 1100px) {
 	:root { --sidebar-width: 264px; }
