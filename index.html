@@ -9,14 +9,14 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="style.css?v=20261030-1">
 		<script src="content/lessons.js" defer></script>
-		<script src="scripts.js?v=20261030-3" defer></script>
+		<script src="scripts.js?v=20261030-4" defer></script>
 	</head>
 	<body>
-		<a class="skip-link" href="#main-content">Skip to lesson</a>
+		<a class="skip-link" href="#main-content">Skip to content</a>
 		<header class="mobile-header">
-			<a class="brand" href="#module-1" aria-label="CSI WordPress guide home">
+			<a class="brand" href="#intro" aria-label="Start at the course introduction">
 				<span>WordPress <strong>FIELD GUIDE</strong></span>
 			</a>
 			<button class="icon-button menu-toggle" type="button" aria-expanded="false" aria-controls="course-sidebar" aria-label="Open course navigation">
@@ -27,18 +27,19 @@
 		<div class="app-layout">
 			<aside class="sidebar" id="course-sidebar" aria-label="Course navigation">
 				<div class="sidebar-top">
-					<a class="brand desktop-brand" href="#module-1" aria-label="CSI WordPress guide home">
+					<a class="brand desktop-brand" href="#intro" aria-label="Start at the course introduction">
 						<span>WordPress <strong>FIELD GUIDE</strong></span>
 					</a>
 					<p class="course-label">WEB DESIGN / BEGINNER</p>
 					<h1 class="course-title">WordPress<br>from zero<br>to live<span>.</span></h1>
-					<p class="course-intro">A hands-on path from first hosting account to a website you can share.</p>
+					<p class="course-intro">A hands-on path from your first hosting account to a blog or portfolio you can publish.</p>
 					<div class="progress-block" aria-live="polite">
 						<div class="progress-copy"><span>COURSE PROGRESS</span><strong id="progress-count">0 / 10</strong></div>
 						<div class="progress-track" role="progressbar" aria-label="Course lessons completed" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="progress-bar"><span id="progress-fill"></span></div>
 					</div>
 				</div>
 				<nav class="lesson-nav" aria-label="Lessons">
+					<a class="tool-link start-link" href="#intro" data-view="intro"><span aria-hidden="true">&#8594;</span> Start here</a>
 					<p class="nav-heading">THE COURSE</p>
 					<ol id="lesson-nav-list"></ol>
 					<p class="nav-heading nav-heading-tools">YOUR TOOLKIT</p>
@@ -57,7 +58,7 @@
 			<main class="main-area" id="main-content" tabindex="-1">
 				<div class="content-wrap">
 					<div class="topline">
-						<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="#module-1">Course</a><span aria-hidden="true">/</span><span id="breadcrumb-current">Getting started</span></nav>
+						<p class="breadcrumbs"><span id="breadcrumb-current" aria-current="page">Start here</span></p>
 						<div class="topline-actions">
 							<div class="text-size-control" role="group" aria-label="Reading text size">
 								<span class="text-size-label">TEXT</span>

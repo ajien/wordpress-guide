@@ -264,7 +264,7 @@
 						<div class="step-list">${steps}</div>
 					</section>
 					<section class="section-block" aria-labelledby="troubleshooting-heading">
-						<h2 class="section-heading" id="troubleshooting-heading"><span class="section-index">05</span> When something goes sideways</h2>
+						<h2 class="section-heading" id="troubleshooting-heading"><span class="section-index">05</span> When something goes wrong</h2>
 						${renderTroubleItems(lesson.troubleshooting)}
 					</section>
 					${renderQuiz(lesson.quiz, lesson.id)}
@@ -315,6 +315,27 @@
 			<section class="section-block"><h2 class="section-heading"><span class="section-index">02</span> Grading rubric / 100 points</h2><div class="rubric-wrap"><table class="rubric"><thead><tr><th>Area</th><th>Evidence</th><th>Points</th></tr></thead><tbody>${rubricRows}<tr><td colspan="2"><strong>Total</strong></td><td><strong>100</strong></td></tr></tbody></table></div></section>
 			<a class="nav-button" href="#module-1">Return to the course <span aria-hidden="true">&#8592;</span></a>
 		</section>`;
+	}
+
+	function renderIntro() {
+		const intro = content.introPage;
+		const moduleLinks = content.lessons.map((lesson) => `<li><a class="course-map-link" href="#${escapeHtml(lesson.id)}"><span class="course-map-number">${escapeHtml(lesson.number)}</span><span class="course-map-copy"><strong>${escapeHtml(lesson.title)}</strong><small>${escapeHtml(lesson.readingTime || "")} reading <span aria-hidden="true">/</span> ${escapeHtml(lesson.handsOnTime || "")} hands-on</small></span><span class="course-map-arrow" aria-hidden="true">&#8594;</span></a></li>`).join("");
+		lessonContent.innerHTML = `<article class="tool-view intro-view" aria-labelledby="tool-title">
+			<p class="eyebrow">${escapeHtml(intro.eyebrow)}</p>
+			<h1 class="tool-title" id="tool-title">${escapeHtml(intro.title)}</h1>
+			<p class="tool-intro">${escapeHtml(intro.summary)}</p>
+			<div class="callout success"><h2>Your goal</h2><p>${escapeHtml(intro.goal)}</p></div>
+			<div class="intro-details">
+				<section class="section-block"><h2 class="section-heading"><span class="section-index">01</span> What you need</h2><ul class="intro-list">${intro.whatYouNeed.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></section>
+				<section class="section-block"><h2 class="section-heading"><span class="section-index">02</span> Choose a page-building path</h2><p>${escapeHtml(intro.paths)}</p><p class="intro-estimate">${escapeHtml(intro.estimate)}</p></section>
+			</div>
+			<p class="source-note">${escapeHtml(intro.wpStat)}</p>
+			<section class="section-block course-map-section" aria-labelledby="course-map-heading">
+				<h2 class="section-heading" id="course-map-heading"><span class="section-index">03</span> Your course map</h2>
+				<ol class="course-map">${moduleLinks}</ol>
+			</section>
+			<a class="nav-button primary" href="#module-1">Start Module 1 <span aria-hidden="true">&#8594;</span></a>
+		</article>`;
 	}
 
 	function updateProgress() {
@@ -368,7 +389,7 @@
 		const route = decodeURIComponent(window.location.hash.slice(1));
 		const lesson = content.lessons.find((item) => item.id === route);
 		if (lesson) return { type: "lesson", value: lesson };
-		if (["glossary", "troubleshooting", "final-project"].includes(route)) return { type: route };
+		if (["intro", "glossary", "troubleshooting", "final-project"].includes(route)) return { type: route };
 		return { type: "lesson", value: content.lessons[0] };
 	}
 
@@ -386,11 +407,12 @@
 			breadcrumb.textContent = lesson.title;
 			document.title = `${lesson.title} | WordPress Setup Guide`;
 		} else {
+			if (route.type === "intro") renderIntro();
 			if (route.type === "glossary") renderGlossary();
 			if (route.type === "troubleshooting") renderTroubleshooting();
 			if (route.type === "final-project") renderProject();
 			document.querySelector(`[data-view="${route.type}"]`)?.setAttribute("aria-current", "page");
-			const viewTitles = { "final-project": "Final project" };
+			const viewTitles = { intro: "Start here", "final-project": "Final project" };
 			breadcrumb.textContent = viewTitles[route.type] || route.type[0].toUpperCase() + route.type.slice(1);
 			document.title = `${breadcrumb.textContent} | WordPress Setup Guide`;
 		}
@@ -545,6 +567,6 @@
 	setTheme(initialTheme);
 	setFontSize(state.fontSize);
 	updateProgress();
-	if (!window.location.hash) history.replaceState(null, "", `#${content.lessons[0].id}`);
+	if (!window.location.hash) history.replaceState(null, "", "#intro");
 	renderRoute();
 })();

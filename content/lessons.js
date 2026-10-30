@@ -5,14 +5,16 @@ window.COURSE_CONTENT = {
       number: "01",
       title: "How websites work",
       eyebrow: "THE BIG PICTURE",
-      summary: "Meet the parts behind every website, then follow one page request from a browser to WordPress and back.",
+      summary: "Learn how websites work, then follow a visitor's request through WordPress. This course will help you publish a basic blog or portfolio.",
       readingTime: "8 MIN",
       handsOnTime: "10-15 MIN",
-      objectives: ["Tell the internet apart from the Web.", "Explain what a domain, host, server, database, and CMS each do.", "Understand how WordPress creates a webpage using saved content.", "Choose between WordPress.org software and WordPress.com hosting."],
+      objectives: ["Tell the internet apart from the Web.", "Explain what a domain, host, server, database, and CMS each do.", "Understand how WordPress creates a webpage using saved content.", "Know that WordPress can build blogs, portfolios, business sites, online stores, news sites, and many other kinds of websites.", "Choose between WordPress.org software and WordPress.com hosting."],
       concepts: [
         { title: "The internet and the Web", text: "The internet is the worldwide network that connects computers. The World Wide Web is one service that uses that network: linked pages and media requested with web addresses. Email and file transfers also use the internet, but they are not the Web." },
         { title: "An address and a place to live", text: "A domain name such as example.org is a readable address. DNS is like the internet's contact list: it helps a browser find the server associated with that name. Web hosting is rented space and services on an always-connected computer. The web server software answers requests for files or application pages." },
         { title: "WordPress and its database", text: "WordPress is a content management system (CMS): software for creating and organizing a site without hand-writing every page. It uses PHP code and a MySQL-compatible database to save settings, pages, posts, and other information. A theme controls presentation; plugins add optional capabilities." },
+        { title: "From blogs to many kinds of websites", text: "WordPress began as a blogging tool. Today, people also use it for portfolios, business sites, news sites, online stores, membership sites, and more. This course focuses on a blog or portfolio, but the skills you learn can be used for many kinds of websites." },
+        { title: "How widely WordPress is used", text: "W3Techs estimated that WordPress was used by 39.5% of all websites on October 30, 2026. Among websites whose content system W3Techs could identify, the share was 58.2%. These figures change over time and depend on how the survey measures websites." },
         { title: "Two WordPress choices", text: "WordPress.org distributes the open-source WordPress software you can install on a host you choose. WordPress.com is a hosted service operated by Automattic, with plans and features managed by that service. They are related, but accounts, hosting, support, and available controls are not interchangeable. This guide focuses on self-hosted WordPress.org software." }
       ],
       steps: [
@@ -24,10 +26,10 @@ window.COURSE_CONTENT = {
       activity: "On paper, draw the request flow for a page on your future site. Label where the domain, DNS, host, server, WordPress, database, and browser fit. Then explain one job in your own words to a classmate.",
       checkpoint: "You can explain why a domain is not the website itself, and why WordPress needs both a server and stored content to respond to a visitor.",
       troubleshooting: [{ issue: "A domain opens a page you did not expect.", fix: "The domain may point to a different host, be newly changed, or be cached by a browser. Confirm the domain's DNS/hosting assignment before changing WordPress." }],
-      takeaways: ["The Web is a service that runs on the internet.", "DNS connects a human-readable domain to a server address.", "WordPress combines code, a database, a theme, and plugins to generate pages.", "WordPress.org software and WordPress.com hosting are different choices."],
+      takeaways: ["The Web is a service that runs on the internet.", "DNS connects a human-readable domain to a server address.", "WordPress combines code, a database, a theme, and plugins to generate pages.", "WordPress can be used for blogs, portfolios, and many other site types.", "WordPress.org software and WordPress.com hosting are different choices."],
       checklist: ["I can define a domain and DNS.", "I can describe the job of hosting and a web server.", "I can trace a request through WordPress and its database.", "I can explain the difference between WordPress.org and WordPress.com."],
       quiz: { question: "Which statement best describes a domain name?", choices: ["It is the readable address people use to find a site.", "It is the database that stores WordPress pages.", "It is a theme that controls page colors."], answer: 0, explanations: ["Correct. DNS helps connect that readable address to the server.", "A database stores information; a domain is an address.", "A theme affects presentation; a domain is an address."] },
-      references: [{ label: "WordPress.org: WordPress features", url: "https://wordpress.org/about/features/" }, { label: "WordPress.org: Support documentation", url: "https://wordpress.org/documentation/" }]
+      references: [{ label: "WordPress.org: WordPress features", url: "https://wordpress.org/about/features/" }, { label: "WordPress.org: Support documentation", url: "https://wordpress.org/documentation/" }, { label: "W3Techs: WordPress usage statistics", url: "https://w3techs.com/technologies/details/cm-wordpress" }]
     },
     {
       id: "module-2",
@@ -341,6 +343,16 @@ window.COURSE_CONTENT = {
       references: [{ label: "WordPress.org: Backing up your WordPress site", url: "https://wordpress.org/documentation/article/wordpress-backups/" }, { label: "WordPress.org: Updating WordPress", url: "https://wordpress.org/documentation/article/updating-wordpress/" }]
     }
   ],
+  introPage: {
+    eyebrow: "WELCOME / START HERE",
+    title: "Build your first WordPress blog or portfolio",
+    summary: "This free guide takes you from your first hosting account to a published website. You will build a basic blog or portfolio, one practical step at a time.",
+    goal: "By the end, you will have a public WordPress site with useful pages, clear navigation, images, and a design that works on a phone.",
+    whatYouNeed: ["A computer with internet access.", "An email address for the free hosting signup.", "A password manager for your private account passwords.", "No coding experience is required. Basic HTML and CSS knowledge can help, but this guide explains the WordPress terms as you go."],
+    paths: "Start with Gutenberg in Module 7. It is built into WordPress and teaches the site's content structure. Module 8 introduces Elementor as an optional visual page builder. Both paths use the same design ideas: clear headings, readable text, helpful images, and easy navigation.",
+    estimate: "The times shown are planning estimates, not measured finish times. Reading and practice times are listed separately. Hosting, installation, and page-building activities often take longer the first time.",
+    wpStat: "WordPress can build blogs, portfolios, business websites, online stores, news sites, and more. W3Techs estimated that it powered 39.5% of all websites on October 30, 2026. This estimate changes over time and depends on how sites are measured."
+  },
   elementorGuide: {
     title: "Create a page with Elementor",
     eyebrow: "OPTIONAL PAGE-BUILDER WORKFLOW",
@@ -430,10 +442,10 @@ window.COURSE_CONTENT = {
     { title: "My backup will not restore", tags: "backup restore files database migration", cause: "The backup may be incomplete, incompatible, or missing either files or database.", fix: "Test restoration in a safe environment and follow the host's current process. Keep a separate copy and ask for help rather than overwriting the live site." }
   ],
   project: {
-    title: "Build a small site for a real audience",
-    intro: "Create a public WordPress site for a fictional small business, community organization, school club, or personal portfolio. Use only information and media you have permission to publish.",
-    checklist: ["A free hosting account that currently permits WordPress, with its limits recorded.", "WordPress installed and reachable at a public address.", "A free theme activated and customized for the audience.", "At least one useful, tested plugin; explain why it is needed.", "Five published pages: Home, About, Services or Projects, Gallery or Resources, and Contact.", "A working navigation menu with links to all five pages.", "Images with appropriate alternative text, formatted text, and at least one embedded video or a linked fallback.", "A layout checked on a phone-sized screen and with keyboard navigation.", "A public URL tested while signed out, HTTPS verified where available, and a backup/maintenance plan recorded."],
-    rubric: [{ category: "Content and audience", points: 25, description: "Five useful pages, clear writing, appropriate media, and a defined audience." }, { category: "Visual design and consistency", points: 20, description: "Readable typography, coherent theme customization, useful image choices, and consistent page patterns." }, { category: "Navigation and accessibility", points: 20, description: "Working menu, logical headings, descriptive links, alternative text, sufficient contrast, and keyboard/mobile checks." }, { category: "WordPress functionality", points: 15, description: "Theme and plugin work as intended; pages, post, media, and any form/video behavior are tested." }, { category: "Publishing and maintenance", points: 10, description: "Public access verified; HTTPS checked; updates and separate file/database backup plan documented." }, { category: "Process and reflection", points: 10, description: "Student explains one design choice, one hosting limitation, and one improvement they would make next." }]
+    title: "Publish a WordPress blog or portfolio",
+    intro: "Build a basic WordPress blog about a subject you care about, or a portfolio that shows your work. You can use a fictional business, school club, community group, or personal interest as your example. WordPress can power many other kinds of websites too. Use only information and media you have permission to publish.",
+    checklist: ["A free hosting account that currently permits WordPress, with its limits recorded.", "WordPress installed and reachable at a public address.", "A free theme activated and customized for the intended readers or visitors.", "At least one useful, tested plugin; explain why it is needed.", "Five published pages suited to the site: Home, About, Blog or Projects, Gallery or Resources, and Contact.", "A working navigation menu with links to all five pages.", "Images with appropriate alternative text, formatted text, and at least one embedded video or a linked fallback.", "A layout checked on a phone-sized screen and with keyboard navigation.", "A public URL tested while signed out, HTTPS verified where available, and a backup/maintenance plan recorded."],
+    rubric: [{ category: "Content and audience", points: 25, description: "Five useful pages for a clear audience, with writing and media suited to a blog or portfolio." }, { category: "Visual design and consistency", points: 20, description: "Readable typography, coherent theme customization, useful image choices, and consistent page patterns." }, { category: "Navigation and accessibility", points: 20, description: "Working menu, logical headings, descriptive links, alternative text, sufficient contrast, and keyboard/mobile checks." }, { category: "WordPress functionality", points: 15, description: "Theme and plugin work as intended; pages, posts, media, and any form/video behavior are tested." }, { category: "Publishing and maintenance", points: 10, description: "Public access verified; HTTPS checked; updates and separate file/database backup plan documented." }, { category: "Process and reflection", points: 10, description: "Student explains one design choice, one hosting limitation, and one improvement they would make next." }]
   }
 };
 

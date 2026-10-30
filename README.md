@@ -1,6 +1,6 @@
 # WordPress Website Setup Guide
 
-A static, self-paced learning guide for beginner web design students. It uses semantic HTML, CSS, vanilla JavaScript, and browser LocalStorage. There is no build step, backend, database, paid dependency, or student login.
+A static, self-paced learning guide for beginner web design students. Students follow the course to build a basic blog or portfolio; WordPress can also power many other kinds of websites. It uses semantic HTML, CSS, vanilla JavaScript, and browser LocalStorage. There is no build step, backend, database, paid dependency, or student login.
 
 ## Run locally
 
