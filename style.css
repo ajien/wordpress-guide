@@ -173,6 +173,7 @@ img { max-width: 100%; }
 .checklist-item input { width: 16px; height: 16px; margin: 1px 0 0; accent-color: var(--green); }
 .checklist-item:has(input:checked) span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--green); }
 .quiz { padding: 17px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.quiz + .quiz { margin-top: 12px; }
 .quiz-question { margin: 0 0 13px; font-size: var(--reading-size); font-weight: 700; line-height: 1.5; }
 .quiz-choices { display: grid; gap: 7px; }
 .quiz-choice { padding: 9px 11px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--ink); cursor: pointer; text-align: left; font-size: var(--reading-size); line-height: 1.4; }

@@ -189,17 +189,22 @@
 		</ul>`;
 	}
 
-	function renderQuiz(quiz, lessonId) {
-		if (!quiz) return "";
+	function lessonQuizzes(lesson) {
+		return [lesson.quiz, ...(lesson.moreQuiz || [])].filter(Boolean);
+	}
+
+	function renderQuiz(lesson) {
+		const quizzes = lessonQuizzes(lesson);
+		if (!quizzes.length) return "";
 		return `<section class="section-block" aria-labelledby="quiz-heading">
 			<h2 class="section-heading" id="quiz-heading"><span class="section-index">CHECK</span> Knowledge check</h2>
-			<div class="quiz" data-quiz="${escapeHtml(lessonId)}">
-				<p class="quiz-question">${escapeHtml(quiz.question)}</p>
+			${quizzes.map((quiz, quizIndex) => `<div class="quiz" data-quiz="${escapeHtml(lesson.id)}" data-quiz-index="${quizIndex}">
+				<p class="quiz-question">${quizzes.length > 1 ? `${quizIndex + 1}. ` : ""}${escapeHtml(quiz.question)}</p>
 				<div class="quiz-choices" role="group" aria-label="Answer choices">
 					${quiz.choices.map((choice, index) => `<button class="quiz-choice" type="button" data-choice-index="${index}" aria-pressed="false">${escapeHtml(choice)}</button>`).join("")}
 				</div>
 				<p class="quiz-feedback" aria-live="polite"></p>
-			</div>
+			</div>`).join("")}
 		</section>`;
 	}
 
@@ -309,7 +314,7 @@
 						<h2 class="section-heading" id="troubleshooting-heading"><span class="section-index">05</span> When something goes wrong</h2>
 						${renderTroubleItems(lesson.troubleshooting)}
 					</section>
-					${renderQuiz(lesson.quiz, lesson.id)}
+					${renderQuiz(lesson)}
 				</div>
 				<aside class="lesson-aside" aria-label="Lesson activity and notes">
 					${lesson.activitySteps?.length ? "" : `<section class="aside-card activity-card"><p class="mini-label">YOUR TURN</p><h2>Put it into practice</h2><p>${escapeHtml(lesson.activity)}</p></section>`}
@@ -551,10 +556,11 @@
 			const quiz = choice.closest("[data-quiz]");
 			const lesson = content.lessons.find((item) => item.id === quiz.dataset.quiz);
 			const index = Number(choice.dataset.choiceIndex);
-			const correct = index === lesson.quiz.answer;
+			const data = lessonQuizzes(lesson)[Number(quiz.dataset.quizIndex)];
+			const correct = index === data.answer;
 			quiz.querySelectorAll("[data-choice-index]").forEach((button) => button.setAttribute("aria-pressed", String(button === choice)));
 			const feedback = quiz.querySelector(".quiz-feedback");
-			feedback.textContent = lesson.quiz.explanations[index];
+			feedback.textContent = data.explanations[index];
 			feedback.dataset.correct = String(correct);
 			return;
 		}
