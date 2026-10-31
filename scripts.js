@@ -27,11 +27,26 @@
 	function loadState() {
 		try {
 			const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+			const layoutVersion = 3;
+			const toLayout2 = (id) => {
+				if (id === "elementor-guide") id = "module-8";
+				else if (id === "module-8") id = "module-9";
+				else if (id === "module-9") id = "module-10";
+				const match = /^module-(\d+)$/.exec(id);
+				// Module 5 (Manage your content) was inserted, shifting later lessons by one.
+				return match && Number(match[1]) >= 5 ? `module-${Number(match[1]) + 1}` : id;
+			};
+			const toLayout3 = (id) => {
+				const match = /^module-(\d+)$/.exec(id);
+				if (!match) return id;
+				// Plan your site became Module 2; SEO and security lessons were added before the last lesson.
+				const number = Number(match[1]);
+				if (number === 11) return "module-14";
+				return number >= 2 && number <= 10 ? `module-${number + 1}` : id;
+			};
 			const remapLessonId = (id) => {
-				if (id === "elementor-guide") return "module-8";
-				if (id === "module-8") return "module-9";
-				if (id === "module-9") return "module-10";
-				return id;
+				if (saved.layout === layoutVersion) return id;
+				return saved.layout === 2 ? toLayout3(id) : toLayout3(toLayout2(id));
 			};
 			const completed = Array.isArray(saved.completed) ? [...new Set(saved.completed.map(remapLessonId))] : [];
 			const checks = {};
@@ -42,13 +57,14 @@
 				});
 			}
 			return {
+				layout: layoutVersion,
 				completed,
 				checks,
 				theme: saved.theme === "dark" || saved.theme === "light" ? saved.theme : null,
 				fontSize: [14, 16, 18, 20].includes(saved.fontSize) ? saved.fontSize : 16
 			};
 		} catch {
-			return { completed: [], checks: {}, theme: null, fontSize: 16 };
+			return { layout: 3, completed: [], checks: {}, theme: null, fontSize: 16 };
 		}
 	}
 
@@ -119,14 +135,33 @@
 		</figure>`;
 	}
 
+	function renderScreenshotItem(item) {
+		return `<div class="screenshot-item"><button class="real-screenshot" type="button" data-image-src="${escapeHtml(safeUrl(item.src))}" data-image-alt="${escapeHtml(item.alt || item.caption || "Instructional screenshot")}" data-image-caption="${escapeHtml(item.caption || "")}">
+					<img src="${escapeHtml(safeUrl(item.src))}" alt="${escapeHtml(item.alt || "")}" loading="lazy">
+				</button><p class="screenshot-caption">${escapeHtml(item.caption || "")}</p></div>`;
+	}
+
+	function renderStepMedia(step) {
+		const images = step.images || (step.image ? [step.image] : []);
+		const media = images.map(renderScreenshotItem).join("");
+		const needed = step.imageNeeded ? `<div class="screenshot-placeholder step-placeholder"><span class="placeholder-badge">SCREENSHOT NEEDED</span><p>${escapeHtml(step.imageNeeded)}</p></div>` : "";
+		return media || needed ? `<div class="step-media">${media}${needed}</div>` : "";
+	}
+
+	function stepImageSources(lesson) {
+		return new Set(lesson.steps.flatMap((step) => (step.images || (step.image ? [step.image] : [])).map((image) => image.src)));
+	}
+
+	function withoutStepImages(visual, used) {
+		if (!visual?.items) return visual;
+		const items = visual.items.filter((item) => !(item.src && used.has(item.src)));
+		return items.length ? { ...visual, items } : null;
+	}
+
 	function renderPlaceholders(visual) {
 		const hasScreenshots = visual.items.some((item) => item.src);
 		const items = visual.items.map((item) => {
-			if (item.src) {
-				return `<div class="screenshot-item"><button class="real-screenshot" type="button" data-image-src="${escapeHtml(safeUrl(item.src))}" data-image-alt="${escapeHtml(item.alt || item.caption || "Instructional screenshot")}" data-image-caption="${escapeHtml(item.caption || "")}">
-					<img src="${escapeHtml(safeUrl(item.src))}" alt="${escapeHtml(item.alt || "")}">
-				</button><p class="screenshot-caption">${escapeHtml(item.caption || "")}</p></div>`;
-			}
+			if (item.src) return renderScreenshotItem(item);
 			return `<div class="screenshot-placeholder"><span class="placeholder-badge">SCREENSHOT PLACEHOLDER</span><p>${escapeHtml(item)}</p></div>`;
 		}).join("");
 		return `<figure class="visual-panel">
@@ -200,8 +235,8 @@
 
 	function renderCopyExample(lessonId) {
 		const examples = {
-			"module-3": [{ label: "Sample admin route", value: "https://your-site.example/wp-admin" }],
-			"module-7": [
+			"module-4": [{ label: "Sample admin route", value: "https://your-site.example/wp-admin" }],
+			"module-9": [
 				{ label: "Sample homepage opening", value: "Welcome to [Organization Name]. We bring [audience] together through [service or activity]. Explore our work, meet the team, or get in touch." },
 				{ label: "HTML link example", value: "<a href=\"https://example.org/contact/\">Contact our team</a>" }
 			]
@@ -212,10 +247,12 @@
 			<button class="copy-button" type="button" data-copy="${escapeHtml(example.value)}">Copy</button></div>`).join("");
 	}
 
-	function renderLessonScreenshots(lesson) {
+	function renderLessonScreenshots(lesson, used) {
 		if (!lesson.screenshots?.length) return "";
+		const visual = withoutStepImages({ items: lesson.screenshots }, used);
+		if (!visual) return "";
 		return renderPlaceholders({
-			items: lesson.screenshots,
+			items: visual.items,
 			caption: lesson.screenshotCaption || "Screenshots from the course demonstration. Interface details may vary by WordPress version and configuration."
 		});
 	}
@@ -231,7 +268,8 @@
 	function renderLesson(lesson) {
 		const completed = state.completed.includes(lesson.id);
 		const concepts = lesson.concepts.map((concept) => `<article class="concept-item"><h3>${escapeHtml(concept.title)}</h3><p>${escapeHtml(concept.text)}</p></article>`).join("");
-		const steps = lesson.steps.map((step, index) => `<article class="step-card"><span class="step-number" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><div><h3>${escapeHtml(step.title)}</h3><p>${escapeHtml(step.body)}</p>${step.checkpoint ? `<p class="step-checkpoint"><strong>Show me:</strong> ${escapeHtml(step.checkpoint)}</p>` : ""}</div></article>`).join("");
+		const usedImages = stepImageSources(lesson);
+		const steps = lesson.steps.map((step, index) => `<article class="step-card"><span class="step-number" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><div><h3>${escapeHtml(step.title)}</h3><p>${escapeHtml(step.body)}</p>${renderStepMedia(step)}${step.checkpoint ? `<p class="step-checkpoint"><strong>Show me:</strong> ${escapeHtml(step.checkpoint)}</p>` : ""}</div></article>`).join("");
 		const activity = lesson.activitySteps?.length ? `<section class="section-block" aria-labelledby="activity-heading"><h2 class="section-heading" id="activity-heading"><span class="section-index">04</span> ${escapeHtml(lesson.activityTitle || "Guided activity")}</h2><p class="activity-intro">${escapeHtml(lesson.activity)}</p><ol class="activity-step-list">${lesson.activitySteps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol></section>` : "";
 		const optionalActivity = lesson.optionalActivity ? `<section class="optional-activity" aria-labelledby="optional-activity-heading"><p class="mini-label">${escapeHtml(lesson.optionalActivityLabel || "OPTIONAL EXTENSION")}</p><h2 id="optional-activity-heading">Optional activity</h2><p>${escapeHtml(lesson.optionalActivity)}</p>${lesson.optionalActivitySteps?.length ? `<ol class="optional-activity-steps">${lesson.optionalActivitySteps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>` : ""}</section>` : "";
 		const takeaways = lesson.takeaways.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
@@ -254,8 +292,6 @@
 						<ul class="checklist">${lesson.objectives.map((objective) => `<li class="checklist-item"><span class="check-glyph" aria-hidden="true">&#8594;</span><span>${escapeHtml(objective)}</span></li>`).join("")}</ul>
 					</section>
 					${renderLessonVideo(lesson.video)}
-					${renderVisual(lesson.visual)}
-				${renderLessonScreenshots(lesson)}
 					<section class="section-block" aria-labelledby="concepts-heading">
 						<h2 class="section-heading" id="concepts-heading"><span class="section-index">02</span> The idea</h2>
 						<div class="concept-list">${concepts}</div>
@@ -265,6 +301,8 @@
 						<h2 class="section-heading" id="steps-heading"><span class="section-index">03</span> Try it step by step</h2>
 						<div class="step-list">${steps}</div>
 					</section>
+					${renderVisual(lesson.visual?.type === "placeholders" ? withoutStepImages(lesson.visual, usedImages) : lesson.visual)}
+					${renderLessonScreenshots(lesson, usedImages)}
 					${activity}
 					${optionalActivity}
 					<section class="section-block" aria-labelledby="troubleshooting-heading">
